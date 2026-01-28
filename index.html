@@ -5,328 +5,465 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCQ Systems | Measuring Clinical Communication Quality</title>
     
-    <!-- Typography: Inter for a clean, tech-forward look -->
+    <!-- Typography: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* --- CORE VARIABLES --- */
         :root {
-            --color-bg: #F8FAFC;       /* Lightest Slate */
-            --color-surface: #FFFFFF;  /* White */
-            --color-text-main: #0F172A; /* Deep Navy */
-            --color-text-muted: #475569; /* Slate Gray */
-            --color-accent: #0284C7;   /* Clinical Blue */
-            --color-border: #E2E8F0;
+            /* Palette inspired by Karra but adapted for Clinical Tech */
+            --bg-dark: #0B1215;       /* Almost black, slightly cool */
+            --bg-light: #F2F2F0;      /* "Bone" white - softer than pure white */
+            --text-light: #F2F2F0;
+            --text-dark: #1A1A1A;
+            --text-muted-dark: #888888;
+            --text-muted-light: #666666;
             
-            --spacing-unit: 1rem;
-            --max-width: 960px;
+            --accent: #2E5C55;        /* Deep Clinical Green/Teal (Trust/Savvy) */
+            --border-light: rgba(0,0,0,0.15);
+            --border-dark: rgba(255,255,255,0.15);
+            
+            --spacing-container: 4vw;
+            --spacing-section: 8rem;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { scroll-behavior: smooth; }
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--color-bg);
-            color: var(--color-text-main);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            letter-spacing: -0.03em; /* Tight tracking for modern look */
+            line-height: 1.1;
+        }
+
+        .text-huge {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 600;
+        }
+
+        .text-large {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 500;
+        }
+
+        .text-medium {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .text-body {
+            font-size: 1.125rem;
+            color: var(--text-muted-light);
+            line-height: 1.6;
+        }
+        
+        .dark-mode .text-body { color: var(--text-muted-dark); }
 
         /* --- UTILITIES --- */
         .container {
-            max-width: var(--max-width);
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 var(--spacing-container);
         }
 
-        .section-padding {
-            padding: 5rem 0;
+        .divider {
+            height: 1px;
+            width: 100%;
+            background-color: var(--border-light);
+            margin: 2rem 0;
         }
+        .divider.dark { background-color: var(--border-dark); }
 
-        h1, h2, h3, h4 {
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border: 1px solid currentColor;
+            border-radius: 50px;
+            margin-top: 2rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
         }
+        .btn:hover { background: var(--text-light); color: var(--bg-dark); }
 
-        h1 { font-size: 2.5rem; line-height: 1.2; }
-        h2 { font-size: 1.75rem; color: var(--color-text-main); margin-bottom: 1.5rem; }
-        h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
-        
-        p {
-            color: var(--color-text-muted);
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-        }
-
-        /* --- HEADER --- */
-        header {
-            background-color: var(--color-surface);
-            border-bottom: 1px solid var(--color-border);
-            padding: 1.5rem 0;
-            position: sticky;
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
             top: 0;
+            width: 100%;
             z-index: 100;
+            padding: 1.5rem 0;
+            background: rgba(11, 18, 21, 0.8); /* Glass effect */
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-dark);
         }
 
-        .header-content {
+        .nav-wrapper {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .logo-placeholder img {
-            height: 60px; /* Adjust this number to make the logo bigger/smaller */
-            width: auto;
-            display: block;
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.04em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
+        .logo img { height: 32px; width: auto; }
 
+        .nav-links { display: flex; gap: 3rem; }
         .nav-link {
-            text-decoration: none;
-            color: var(--color-text-muted);
             font-size: 0.9rem;
-            font-weight: 500;
-            margin-left: 2rem;
-            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
         }
-
-        .nav-link:hover {
-            color: var(--color-accent);
+        
+        /* Animated underline effect */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--text-light);
+            transition: width 0.3s ease;
         }
+        .nav-link:hover::after { width: 100%; }
 
-        /* --- HERO --- */
+        /* --- HERO SECTION --- */
         .hero {
-            background-color: var(--color-surface);
-            padding: 6rem 0 5rem;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .hero h1 {
-            max-width: 800px;
+            padding-top: 12rem;
+            padding-bottom: 8rem;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-dark);
         }
 
         .hero-sub {
+            max-width: 600px;
+            margin-top: 2rem;
             font-size: 1.25rem;
-            max-width: 650px;
-            color: var(--color-text-muted);
-            margin-top: 1.5rem;
+            color: var(--text-muted-dark);
         }
 
-        /* --- GRID SECTIONS --- */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+        /* --- SECTION LAYOUTS (The Karra Grid) --- */
+        .section {
+            padding: var(--spacing-section) 0;
         }
 
-        .grid-3 {
+        .bg-light {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* The "Sticky Label" Layout */
+        .grid-with-label {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 250px 1fr;
             gap: 2rem;
         }
 
-        /* --- CARDS --- */
-        .card {
-            background: var(--color-surface);
-            padding: 2rem;
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
+        .section-label {
+            position: sticky;
+            top: 120px;
+            align-self: start;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .card h3 {
-            color: var(--color-text-main);
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
         }
 
-        /* --- APPROACH SECTION --- */
-        .approach-list {
-            list-style: none;
+        .content-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
         }
 
-        .approach-list li {
+        /* --- BENTO GRID / CARDS --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-top: 1px solid var(--border-light);
+            border-left: 1px solid var(--border-light);
+        }
+
+        .bento-card {
+            padding: 3rem 2rem;
+            border-right: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .bento-card:hover {
+            background-color: #FFFFFF;
+        }
+
+        .card-number {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--border-light); /* Subtle ghost number */
+            line-height: 1;
+        }
+
+        /* --- LIST STYLES --- */
+        .styled-list li {
             position: relative;
             padding-left: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
-
-        .approach-list li::before {
-            content: "•";
-            color: var(--color-accent);
-            font-weight: bold;
+        .styled-list li::before {
+            content: "→";
             position: absolute;
             left: 0;
+            color: var(--accent);
         }
 
-        .disclaimer {
+        .disclaimer-box {
             margin-top: 2rem;
-            padding: 1rem 1.5rem;
-            background-color: #f1f5f9;
-            border-left: 3px solid var(--color-text-muted);
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.03);
+            border-left: 2px solid var(--accent);
             font-size: 0.9rem;
-            color: var(--color-text-muted);
         }
 
-        /* --- ABOUT & INTEROP --- */
-        .text-block {
-            max-width: 700px;
+        /* --- FOOTER --- */
+        .footer {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border-dark);
         }
-
-        /* --- CONTACT & FOOTER --- */
-        .contact-section {
-            background-color: var(--color-text-main);
-            color: white;
-            text-align: center;
-        }
-
-        .contact-section h2 { color: white; }
-        .contact-section p { color: #94a3b8; }
         
-        .email-link {
-            color: white;
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 4px;
-            font-size: 1.25rem;
+        .footer-cta h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 2rem;
         }
 
-        footer {
-            background-color: var(--color-bg);
-            padding: 2rem 0;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #94a3b8;
+        .email-huge {
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            border-bottom: 2px solid var(--text-muted-dark);
+            display: inline-block;
+            margin-bottom: 4rem;
+            padding-bottom: 0.5rem;
+        }
+        .email-huge:hover {
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
-        /* --- MOBILE RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            h1 { font-size: 2rem; }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .nav-link { margin: 0 1rem; }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted-dark);
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .grid-with-label { grid-template-columns: 1fr; }
+            .section-label { position: relative; top: 0; margin-bottom: 2rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; } /* Simplified for demo */
+            .text-huge { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="container header-content">
-            <!-- Logo Area: Using the image file directly -->
-            <a href="#" class="logo-placeholder">
-                <img src="1_23_26_Logo_Light_FINAL.svg" alt="CCQ Systems Logo">
+    <!-- NAV -->
+    <nav>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo">
+                <!-- Replace src with your actual SVG file path -->
+                <img src="1_23_26_Logo_Light_FINAL.svg" alt="CCQ" style="filter: invert(1);"> 
+                CCQ SYSTEMS
             </a>
-            
-            <nav>
+            <div class="nav-links">
                 <a href="#approach" class="nav-link">Approach</a>
+                <a href="#solutions" class="nav-link">Solutions</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
-            </nav>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero container">
+        <h1 class="text-huge">
+            Measuring clinical <br>
+            <span style="color: var(--text-muted-dark);">communication quality.</span>
+        </h1>
+        <p class="hero-sub">
+            We develop analytic solutions that transform clinical conversations into structured, measurable insights—supporting healthcare quality improvement and research.
+        </p>
+        <div>
+            <a href="#contact" class="btn">Get in touch</a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- INTRO / WHAT WE DO (Light Mode) -->
+    <section class="section bg-light" id="approach">
         <div class="container">
-            <h1>Measuring clinical communication quality.</h1>
-            <p class="hero-sub">CCQ develops analytic solutions that transform clinical conversations into structured, measurable insights—supporting healthcare quality improvement and research.</p>
-        </div>
-    </section>
-
-    <!-- What We Do -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="grid-2">
-                <div>
-                    <h2>What We Do</h2>
-                    <p>Clinical care depends on communication, yet communication quality between clinicians and patients is rarely measured in a systematic or scalable way.</p>
-                    <p>CCQ builds infrastructure to analyze clinical encounters and extract signals related to clinician–patient interaction and decision processes—using transcripts generated by existing ambient documentation technologies.</p>
+            <div class="grid-with-label">
+                <div class="section-label text-dark">
+                    <div class="dot"></div>
+                    What we do
                 </div>
-                
-                <div id="approach">
-                    <h2>Our Approach</h2>
-                    <p>We focus on measurement, not judgment. Our work is grounded in established decision-science and clinical communication literature and is designed to be:</p>
-                    <ul class="approach-list">
-                        <li>Encounter-level and scalable</li>
-                        <li>Vendor-agnostic and workflow-aware</li>
-                        <li>Suitable for quality improvement, system-level analysis, and research</li>
-                    </ul>
-                    <div class="disclaimer">
-                        CCQ focuses on measurement and analysis and does not provide clinical recommendations or decision support.
+                <div class="content-col">
+                    <h2 class="text-large">
+                        Clinical care depends on communication, yet the quality of interaction between clinicians and patients is rarely measured systematically.
+                    </h2>
+                    <div class="text-body" style="max-width: 800px;">
+                        <p>CCQ builds infrastructure to analyze clinical encounters and extract signals related to interaction and decision processes—using transcripts generated by existing ambient documentation technologies.</p>
+                        
+                        <div class="divider"></div>
+                        
+                        <h3 class="text-medium" style="margin-bottom: 1rem;">Our Methodology</h3>
+                        <p>We focus on measurement, not judgment. Our work is grounded in established decision-science and clinical communication literature and is designed to be:</p>
+                        <ul class="styled-list" style="margin-top: 1.5rem;">
+                            <li>Encounter-level and scalable</li>
+                            <li>Vendor-agnostic and workflow-aware</li>
+                            <li>Suitable for quality improvement and system-level analysis</li>
+                        </ul>
+                        
+                        <div class="disclaimer-box">
+                            <strong>Note:</strong> CCQ focuses on measurement and analysis and does not provide clinical recommendations or decision support.
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Who CCQ Is For -->
-    <section class="section-padding" style="background-color: #fff; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <!-- WHO IT'S FOR (Light Mode - Bento Grid) -->
+    <section class="section bg-light" id="solutions" style="padding-top: 0;">
         <div class="container">
-            <h2>Who CCQ Is For</h2>
-            <p style="max-width: 600px;">CCQ works with organizations that generate or analyze clinical documentation, including:</p>
+            <div class="grid-with-label">
+                <div class="section-label text-dark">
+                    <div class="dot"></div>
+                    Who CCQ is for
+                </div>
+                <div>
+                    <h2 class="text-large" style="margin-bottom: 3rem;">
+                        Supporting the ecosystem of <br>clinical documentation.
+                    </h2>
+                    
+                    <div class="bento-grid">
+                        <!-- Card 1 -->
+                        <div class="bento-card">
+                            <div class="card-number">01</div>
+                            <h3 class="text-medium">Documentation Vendors</h3>
+                            <p class="text-body" style="font-size: 0.95rem;">
+                                AI scribe and ambient documentation vendors seeking to evaluate communication and decision-related signals derived from transcripts.
+                            </p>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="bento-card">
+                            <div class="card-number">02</div>
+                            <h3 class="text-medium">Health Systems</h3>
+                            <p class="text-body" style="font-size: 0.95rem;">
+                                Provider organizations conducting aggregated analysis of clinical communication patterns across clinicians, services, or care settings.
+                            </p>
+                        </div>
+                        
+                        <!-- Card 3 -->
+                        <div class="bento-card">
+                            <div class="card-number">03</div>
+                            <h3 class="text-medium">Researchers</h3>
+                            <p class="text-body" style="font-size: 0.95rem;">
+                                Academic researchers and pilot partners studying clinical communication and decision-making processes in real-world settings.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT / INTEROP (Dark Mode) -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="grid-with-label">
+                <div class="section-label">
+                    <div class="dot" style="background-color: #fff;"></div>
+                    About Us
+                </div>
+                <div class="content-col">
+                    <div style="border-left: 1px solid var(--border-dark); padding-left: 2rem;">
+                        <h2 class="text-large" style="margin-bottom: 1.5rem;">Designed for Interoperability</h2>
+                        <p class="text-body">
+                            CCQ is built to integrate with existing clinical documentation and AI scribe environments. Our tools are designed to complement—not replace—clinical workflows and existing health IT infrastructure.
+                        </p>
+                    </div>
+
+                    <div style="border-left: 1px solid var(--border-dark); padding-left: 2rem;">
+                        <h2 class="text-large" style="margin-bottom: 1.5rem;">The Team</h2>
+                        <p class="text-body">
+                            CCQ is an early-stage healthcare analytics company led by a multidisciplinary founding team that includes a practicing clinician, health-services researchers, and health-system operators. 
+                            <br><br>
+                            Together, we combine clinical insight with technical expertise to build scalable, policy-aware measurement infrastructure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-cta">
+                <div class="section-label" style="margin-bottom: 2rem;">
+                    <div class="dot" style="background-color: var(--accent);"></div>
+                    Contact
+                </div>
+                <h2>Ready to measure what matters?</h2>
+                <a href="mailto:info@ccqsys.com" class="email-huge">info@ccqsys.com</a>
+            </div>
             
-            <div class="grid-3" style="margin-top: 2rem;">
-                <div class="card">
-                    <h3>Documentation Vendors</h3>
-                    <p style="font-size: 0.95rem; margin-bottom:0;">AI scribe and ambient documentation vendors seeking to evaluate communication and decision-related signals derived from generated transcripts.</p>
-                </div>
-                <div class="card">
-                    <h3>Health Systems</h3>
-                    <p style="font-size: 0.95rem; margin-bottom:0;">Provider organizations conducting aggregated analysis of clinical communication patterns and decision-related signals across clinicians, services, or care settings.</p>
-                </div>
-                <div class="card">
-                    <h3>Researchers</h3>
-                    <p style="font-size: 0.95rem; margin-bottom:0;">Researchers and pilot partners studying clinical communication and decision-making processes.</p>
-                </div>
+            <div class="footer-bottom">
+                <div>© 2026 CCQ Systems, Inc.</div>
+                <div>All rights reserved.</div>
             </div>
-        </div>
-    </section>
-
-    <!-- Interoperability & About -->
-    <section class="section-padding" id="about">
-        <div class="container">
-            <div class="grid-2">
-                <div>
-                    <h2>Designed for Interoperability</h2>
-                    <p>CCQ is built to integrate with existing clinical documentation and AI scribe environments. Our tools are designed to complement—not replace—clinical workflows and existing health IT infrastructure.</p>
-                </div>
-                <div>
-                    <h2>About CCQ</h2>
-                    <p>CCQ is an early-stage healthcare analytics company focused on developing neutral, extensible measurement infrastructure for clinical communication and decision-making.</p>
-                    <p>The company is led by a multidisciplinary founding team that includes a practicing clinician alongside health-services researchers and health-system operators. Together, the team combines clinical insight with technical and operational expertise to build scalable, policy-aware measurement infrastructure grounded in real-world healthcare workflows.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section-padding contact-section" id="contact">
-        <div class="container">
-            <h2>Contact</h2>
-            <p>For inquiries or collaboration:</p>
-            <a href="mailto:info@ccqsys.com" class="email-link">info@ccqsys.com</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            &copy; 2026 CCQ Systems, Inc. All rights reserved.
         </div>
     </footer>
 
