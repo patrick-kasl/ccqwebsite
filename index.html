@@ -477,7 +477,7 @@
         /* =========================================
            SECTION 5: WHAT WE DO (ORIGINAL)
            ========================================= */
-        #what-we-do {
+        /* #what-we-do {
             background-color: var(--platinum);
             color: var(--charcoal);
             z-index: 5;
@@ -532,6 +532,141 @@
             line-height: 1.6;
             max-width: 800px;
             color: var(--deep-blue);
+        } */
+        /* =========================================
+           SECTION 5: WHAT WE DO
+           ========================================= */
+        #what-we-do {
+            background-color: var(--platinum);
+            color: var(--charcoal);
+            z-index: 5;
+            height: auto;
+            min-height: 100vh;
+            padding: 10rem var(--padding-x);
+            align-items: flex-start;
+            border-top: var(--border-thick) solid var(--charcoal);
+        }
+
+        .wwd-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            width: 100%;
+        }
+
+        .wwd-label {
+            position: sticky;
+            top: 150px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .wwd-label::after {
+            content: '';
+            height: 80px;
+            width: var(--border-thick);
+            background: var(--charcoal);
+        }
+
+        .wwd-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6rem;
+        }
+
+        .wwd-item {
+            border-left: var(--border-thick) solid var(--steel);
+            padding-left: 3rem;
+            position: relative;
+        }
+        
+        .wwd-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--teal);
+            transform: rotate(45deg);
+        }
+
+        .wwd-item h3 {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .wwd-item p {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            max-width: 800px;
+            color: var(--deep-blue);
+            font-weight: 300;
+        }
+
+        .accent-text { 
+            color: var(--teal); 
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            /* General */
+            .digital-grid { width: 100vw; opacity: 0.3; }
+            .geo-accent { display: none; }
+            
+            /* Slide 2 */
+            .bauhaus-layout { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto auto auto;
+            }
+            .b-1, .b-2, .b-3 { 
+                grid-column: 1; 
+                grid-row: auto; 
+                min-height: 300px;
+            }
+            .b-3 { flex-direction: column; gap: 2rem; }
+            
+            /* Slide 3 */
+            .constructivist-grid { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto;
+            }
+            .c-1, .c-2, .c-3, .c-4, .c-5 { 
+                grid-column: 1; 
+                grid-row: auto; 
+                min-height: 250px;
+            }
+            .c-1 { 
+                writing-mode: horizontal-tb; 
+                transform: none; 
+            }
+            
+            /* Slide 4 */
+            .type-bauhaus-wrapper { 
+                grid-template-columns: 1fr; 
+                gap: 3rem;
+            }
+            .geo-frame, .geo-circle-bg { display: none; }
+            
+            /* WWD Mobile */
+            .wwd-grid { grid-template-columns: 1fr; }
+            .wwd-label { 
+                position: relative; 
+                top: 0; 
+                margin-bottom: 2rem; 
+                flex-direction: row; 
+                align-items: center;
+            }
+            .wwd-label::after { height: var(--border-thick); width: 80px; }
         }
 
         .accent-text { color: var(--teal); }
@@ -602,7 +737,7 @@
             <div class="text-side">
                 <span class="label" style="color: var(--teal);">02 // Solutions</span>
                 <h2>Vendor-agnostic <br>infrastructure for <br>modern care.</h2>
-                <div class="stat-grid">
+                <!-- <div class="stat-grid">
                     <div class="stat">
                         <h3>100%</h3>
                         <p>Encounter-level<br>Analysis</p>
@@ -611,7 +746,7 @@
                         <h3>0.0s</h3>
                         <p>Workflow<br>Interruption</p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -624,7 +759,7 @@
             </div>
             <div class="m-block m-2">
                 <span class="label" style="color: var(--deep-blue); border-color: var(--deep-blue); margin-bottom: 1rem;">03 // Methodology</span>
-                <div class="m-circle"></div>
+                <!-- <div class="m-circle"></div> -->
                 <h2 class="bauhaus-headline">From<br>Speech<br>To Data.</h2>
             </div>
             <div class="m-block m-4">
@@ -653,7 +788,7 @@
     </section>
 
     <!-- SECTION 5: WHAT WE DO (Original) -->
-    <section id="what-we-do" class="stack-section" style="position: relative;">
+    <!-- <section id="what-we-do" class="stack-section" style="position: relative;">
         <div class="wwd-grid">
             <div class="wwd-label">What We Do</div>
             <div class="wwd-content">
@@ -674,7 +809,31 @@
                 </div>
             </div>
         </div>
+    </section> -->
+    <!-- SECTION 5: WHAT WE DO -->
+    <section id="what-we-do" class="stack-section" style="position: relative;">
+        <div class="wwd-grid">
+            <div class="wwd-label">What We Do</div>
+            <div class="wwd-content">
+                <div class="wwd-item">
+                    <h3>We Build Infrastructure.</h3>
+                    <p>We create <strong class="accent-text">encounter-level, scalable</strong> systems that integrate with ambient documentation technologies to extract meaningful signal from noise.</p>
+                </div>
+                <div class="wwd-item">
+                    <h3>We Measure Quality.</h3>
+                    <p>Grounded in established decision-science literature, our tools focus on <strong class="accent-text">quality improvement</strong> and system-level analysis rather than individual judgment.</p>
+                </div>
+                <div class="wwd-item">
+                    <h3>We Enable Research.</h3>
+                    <p>Designed for <strong class="accent-text">academic researchers</strong> and health systems conducting aggregated analysis of communication patterns across care settings.</p>
+                </div>
+                <div>
+                    <a href="#" class="btn" style="border-color: var(--charcoal); color: var(--charcoal);">Contact Us</a>
+                </div>
+            </div>
+        </div>
     </section>
+
 
     <script>
         // Color palette
