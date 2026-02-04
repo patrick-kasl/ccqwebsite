@@ -72,6 +72,28 @@
             font-size: 0.85rem;
         }
 
+        /* --- BLUR REVEAL ANIMATION (NEW) --- */
+        /* This creates the initial state: pushed down, transparent, and blurry */
+        .blur-reveal {
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); /* "Pop" easing */
+            will-change: opacity, filter, transform;
+        }
+
+        /* This is the state when the element is visible */
+        .blur-reveal.is-visible {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
+
+        /* Stagger delays so items pop in one after another */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
         /* --- NAVIGATION (Original) --- */
         nav {
             position: fixed;
@@ -130,7 +152,7 @@
         }
 
         /* =========================================
-           SLIDE 1: DIGITAL NERVOUS SYSTEM (ORIGINAL)
+           SLIDE 1: DIGITAL NERVOUS SYSTEM (UPDATED)
            ========================================= */
         #option-1 {
             background-color: var(--charcoal);
@@ -145,17 +167,18 @@
             height: 100vh;
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(16, 1fr);
+            grid-auto-rows: min-content; 
             gap: 2px;
             z-index: 1;
             mask-image: linear-gradient(to left, black 0%, black 40%, transparent 100%);
             -webkit-mask-image: linear-gradient(to left, black 0%, black 40%, transparent 100%);
             opacity: 0.6;
+            overflow: hidden;
         }
 
         .cell {
             width: 100%;
-            height: 100%;
+            aspect-ratio: 1 / 1; 
             border: 1px solid transparent;
             background: transparent;
             opacity: 0;
@@ -230,7 +253,7 @@
         }
 
         /* =========================================
-           SLIDE 2: THE BLUEPRINT (BAUHAUS VERSION)
+           SLIDE 2: THE BLUEPRINT
            ========================================= */
         #option-2 {
             background-color: var(--deep-blue);
@@ -310,26 +333,8 @@
             font-weight: 700;
         }
         
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0;
-            border-top: var(--border-thick) solid var(--steel);
-        }
-        
-        .stat {
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--steel);
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-        
-        .stat h3 { color: var(--teal); font-size: 2.5rem; font-weight: 800; }
-        .stat p { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
-
         /* =========================================
-           SLIDE 3: MONDRIAN GRID (BAUHAUS VERSION)
+           SLIDE 3: MONDRIAN GRID
            ========================================= */
         #option-3 {
             background-color: var(--platinum);
@@ -383,17 +388,6 @@
             position: relative;
         }
 
-        .m-circle {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: var(--steel);
-            border-radius: 50%;
-            top: 2rem;
-            right: 2rem;
-            mix-blend-mode: multiply;
-        }
-
         .m-3 { 
             grid-column: 2 / 4; 
             grid-row: 2 / 3; 
@@ -429,7 +423,7 @@
         }
 
         /* =========================================
-           SLIDE 4: TYPOGRAPHIC IMPACT (ORIGINAL)
+           SLIDE 4: TYPOGRAPHIC IMPACT
            ========================================= */
         #option-4 {
             background-color: var(--charcoal);
@@ -474,65 +468,6 @@
             max-width: 400px;
         }
 
-        /* =========================================
-           SECTION 5: WHAT WE DO (ORIGINAL)
-           ========================================= */
-        /* #what-we-do {
-            background-color: var(--platinum);
-            color: var(--charcoal);
-            z-index: 5;
-            height: auto;
-            min-height: 100vh;
-            padding: 10rem var(--padding-x);
-            align-items: flex-start;
-        }
-
-        .wwd-grid {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 2rem;
-            width: 100%;
-        }
-
-        .wwd-label {
-            position: sticky;
-            top: 150px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .wwd-label::after {
-            content: '';
-            height: 50px;
-            width: 2px;
-            background: var(--charcoal);
-        }
-
-        .wwd-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6rem;
-        }
-
-        .wwd-item h3 {
-            font-size: clamp(2.5rem, 4vw, 4rem);
-            font-weight: 600;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .wwd-item p {
-            font-size: 1.25rem;
-            line-height: 1.6;
-            max-width: 800px;
-            color: var(--deep-blue);
-        } */
         /* =========================================
            SECTION 5: WHAT WE DO
            ========================================= */
@@ -618,72 +553,98 @@
             font-weight: 700;
         }
 
+        /* =========================================
+           FOOTER
+           ========================================= */
+        .footer {
+            background-color: var(--deep-blue);
+            color: var(--platinum);
+            padding: 6rem var(--padding-x) 2rem;
+            position: relative;
+            z-index: 6; /* Sit above stack sections */
+            border-top: var(--border-thick) solid var(--teal);
+        }
+
+        .footer-cta {
+            margin-bottom: 6rem;
+            max-width: 1000px;
+        }
+
+        .section-label {
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--teal);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--teal);
+            border-radius: 50%;
+        }
+
+        .footer-cta h2 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--steel);
+        }
+
+        .email-huge {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 800;
+            color: var(--platinum);
+            letter-spacing: -0.03em;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: inline-block;
+            line-height: 1.1;
+        }
+
+        .email-huge:hover {
+            color: var(--teal);
+            border-bottom-color: var(--teal);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--steel);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- MEDIA QUERIES --- */
         @media (max-width: 900px) {
             /* General */
             .digital-grid { width: 100vw; opacity: 0.3; }
             .geo-accent { display: none; }
             
             /* Slide 2 */
-            .bauhaus-layout { 
-                grid-template-columns: 1fr; 
-                grid-template-rows: auto auto auto;
-            }
-            .b-1, .b-2, .b-3 { 
-                grid-column: 1; 
-                grid-row: auto; 
-                min-height: 300px;
-            }
-            .b-3 { flex-direction: column; gap: 2rem; }
-            
-            /* Slide 3 */
-            .constructivist-grid { 
-                grid-template-columns: 1fr; 
-                grid-template-rows: auto;
-            }
-            .c-1, .c-2, .c-3, .c-4, .c-5 { 
-                grid-column: 1; 
-                grid-row: auto; 
-                min-height: 250px;
-            }
-            .c-1 { 
-                writing-mode: horizontal-tb; 
-                transform: none; 
-            }
-            
-            /* Slide 4 */
-            .type-bauhaus-wrapper { 
-                grid-template-columns: 1fr; 
-                gap: 3rem;
-            }
-            .geo-frame, .geo-circle-bg { display: none; }
-            
-            /* WWD Mobile */
-            .wwd-grid { grid-template-columns: 1fr; }
-            .wwd-label { 
-                position: relative; 
-                top: 0; 
-                margin-bottom: 2rem; 
-                flex-direction: row; 
-                align-items: center;
-            }
-            .wwd-label::after { height: var(--border-thick); width: 80px; }
-        }
-
-        .accent-text { color: var(--teal); }
-
-        @media (max-width: 900px) {
-            /* General */
-            .digital-grid { width: 100vw; opacity: 0.3; }
-            /* Bauhaus Mobile */
             .split-layout { grid-template-columns: 1fr; }
             .visual-side { height: 40vh; border-right: none; border-bottom: 2px solid var(--platinum); }
+            
+            /* Slide 3 */
             .mondrian-grid { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; }
             .m-1 { display: none; }
             .m-2, .m-3, .m-4 { grid-column: 1 / -1; grid-row: auto; height: auto; min-height: 300px; padding: 2rem; }
+            .m-3 { flex-direction: column; gap: 2rem; align-items: flex-start;}
+            
             /* WWD Mobile */
             .wwd-grid { grid-template-columns: 1fr; }
             .wwd-label { position: relative; top: 0; margin-bottom: 2rem; flex-direction: row; align-items: center;}
-            .wwd-label::after { height: 2px; width: 50px; }
+            .wwd-label::after { height: var(--border-thick); width: 80px; }
+            
+            /* Footer Mobile */
+            .footer-bottom { flex-direction: column; gap: 1rem; }
         }
 
     </style>
@@ -703,26 +664,26 @@
             <a href="#option-1">Approach</a>
             <a href="#option-2">Vision</a>
             <a href="#option-3">Data</a>
-            <a href="#option-4">Contact</a>
+            <a href="#contact">Contact</a>
         </div>
     </nav>
 
-    <!-- SLIDE 1: Original Digital Nervous System -->
+    <!-- SLIDE 1: Digital Nervous System -->
     <section id="option-1" class="stack-section">
         <div class="digital-grid" id="gridContainer">
             <!-- JS generates divs here -->
         </div>
         <div class="content-wrapper">
-            <div class="hero-text">
+            <div class="hero-text blur-reveal">
                 <span class="label">01 // Approach</span>
                 <h1>Measuring clinical<br><span>communication quality.</span></h1>
                 <p>We transform clinical conversations into structured, measurable insights—no judgment, just precision.</p>
-                <a href="#" class="btn">Our Methodology</a>
+                <a href="#what-we-do" class="btn">Our Methodology</a>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 2: Bauhaus Blueprint (NEW) -->
+    <!-- SLIDE 2: Bauhaus Blueprint -->
     <section id="option-2" class="stack-section">
         <div class="split-layout">
             <div class="visual-side">
@@ -736,22 +697,13 @@
             </div>
             <div class="text-side">
                 <span class="label" style="color: var(--teal);">02 // Solutions</span>
-                <h2>Vendor-agnostic <br>infrastructure for <br>modern care.</h2>
-                <!-- <div class="stat-grid">
-                    <div class="stat">
-                        <h3>100%</h3>
-                        <p>Encounter-level<br>Analysis</p>
-                    </div>
-                    <div class="stat">
-                        <h3>0.0s</h3>
-                        <p>Workflow<br>Interruption</p>
-                    </div>
-                </div> -->
+                <!-- Added blur-reveal to this headline -->
+                <h2 class="blur-reveal">Vendor-agnostic <br>infrastructure for <br>modern care.</h2>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 3: Bauhaus Mondrian Grid (NEW) -->
+    <!-- SLIDE 3: Bauhaus Mondrian Grid -->
     <section id="option-3" class="stack-section">
         <div class="mondrian-grid">
             <div class="m-block m-1">
@@ -759,80 +711,75 @@
             </div>
             <div class="m-block m-2">
                 <span class="label" style="color: var(--deep-blue); border-color: var(--deep-blue); margin-bottom: 1rem;">03 // Methodology</span>
-                <!-- <div class="m-circle"></div> -->
-                <h2 class="bauhaus-headline">From<br>Speech<br>To Data.</h2>
+                <!-- Added blur-reveal to this headline -->
+                <h2 class="bauhaus-headline blur-reveal">From<br>Speech<br>To Data.</h2>
             </div>
             <div class="m-block m-4">
-                <p style="font-size: 1.25rem; font-weight: 600; line-height: 1.5;">We extract signals related to interaction and decision processes using ambient documentation transcripts.</p>
+                <p class="blur-reveal delay-100" style="font-size: 2.25rem; font-weight: 600; line-height: 1.5;">We extract signals related to interaction and decision processes using ambient documentation transcripts.</p>
             </div>
             <div class="m-block m-3">
-                <p class="bauhaus-sub">Grounded in established decision-science literature.</p>
+                <p class="bauhaus-sub blur-reveal delay-200">Grounded in established decision-science literature.</p>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 4: Typographic Impact (Original) -->
+    <!-- SLIDE 4: Typographic Impact -->
     <section id="option-4" class="stack-section">
         <div class="content-wrapper">
             <div class="big-type-wrapper">
                 <span class="label">04 // Mission</span>
-                <span class="giant-word filled">ANALYTICS</span>
-                <span class="giant-word">CLINICAL</span>
-                <span class="giant-word">DECISIONS</span>
+                <span class="giant-word filled blur-reveal">ANALYTICS</span>
+                <span class="giant-word blur-reveal delay-100">CLINICAL</span>
+                <span class="giant-word blur-reveal delay-200">DECISIONS</span>
                 
-                <div class="type-desc">
+                <div class="type-desc blur-reveal delay-300">
                     CCQ focuses on measurement and analysis. We provide the infrastructure to understand what happens in the exam room at scale.
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 5: WHAT WE DO (Original) -->
-    <!-- <section id="what-we-do" class="stack-section" style="position: relative;">
-        <div class="wwd-grid">
-            <div class="wwd-label">What We Do</div>
-            <div class="wwd-content">
-                <div class="wwd-item">
-                    <h3>We build infrastructure.</h3>
-                    <p>We create <strong class="accent-text">encounter-level, scalable</strong> systems that integrate with ambient documentation technologies to extract meaningful signal from noise.</p>
-                </div>
-                <div class="wwd-item">
-                    <h3>We measure quality.</h3>
-                    <p>Grounded in established decision-science literature, our tools focus on <strong class="accent-text">quality improvement</strong> and system-level analysis rather than individual judgment.</p>
-                </div>
-                <div class="wwd-item">
-                    <h3>We enable research.</h3>
-                    <p>Designed for <strong class="accent-text">academic researchers</strong> and health systems conducting aggregated analysis of communication patterns across care settings.</p>
-                </div>
-                <div>
-                    <a href="#" class="btn" style="border-color: var(--charcoal); color: var(--charcoal);">Contact Us</a>
-                </div>
-            </div>
-        </div>
-    </section> -->
     <!-- SECTION 5: WHAT WE DO -->
     <section id="what-we-do" class="stack-section" style="position: relative;">
         <div class="wwd-grid">
             <div class="wwd-label">What We Do</div>
             <div class="wwd-content">
                 <div class="wwd-item">
-                    <h3>We Build Infrastructure.</h3>
-                    <p>We create <strong class="accent-text">encounter-level, scalable</strong> systems that integrate with ambient documentation technologies to extract meaningful signal from noise.</p>
+                    <!-- Added blur-reveal and delay to create staggered pop-in -->
+                    <h3 class="blur-reveal">We Build Infrastructure.</h3>
+                    <p class="blur-reveal delay-100">We create <strong class="accent-text">encounter-level, scalable</strong> systems that integrate with ambient documentation technologies to extract meaningful signal from noise.</p>
                 </div>
                 <div class="wwd-item">
-                    <h3>We Measure Quality.</h3>
-                    <p>Grounded in established decision-science literature, our tools focus on <strong class="accent-text">quality improvement</strong> and system-level analysis rather than individual judgment.</p>
+                    <h3 class="blur-reveal">We Measure Quality.</h3>
+                    <p class="blur-reveal delay-100">Grounded in established decision-science literature, our tools focus on <strong class="accent-text">quality improvement</strong> and system-level analysis rather than individual judgment.</p>
                 </div>
                 <div class="wwd-item">
-                    <h3>We Enable Research.</h3>
-                    <p>Designed for <strong class="accent-text">academic researchers</strong> and health systems conducting aggregated analysis of communication patterns across care settings.</p>
-                </div>
-                <div>
-                    <a href="#" class="btn" style="border-color: var(--charcoal); color: var(--charcoal);">Contact Us</a>
+                    <h3 class="blur-reveal">We Enable Research.</h3>
+                    <p class="blur-reveal delay-100">Designed for <strong class="accent-text">academic researchers</strong> and health systems conducting aggregated analysis of communication patterns across care settings.</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-cta">
+                <div class="section-label" style="margin-bottom: 2rem;">
+                    <div class="dot"></div>
+                    Contact
+                </div>
+                <!-- Added blur-reveal -->
+                <h2 class="blur-reveal">Ready to measure what matters?</h2>
+                <a href="mailto:info@ccqsys.com" class="email-huge blur-reveal delay-100">info@ccqsys.com</a>
+            </div>
+            
+            <div class="footer-bottom">
+                <div>© 2026 CCQ Systems, Inc.</div>
+                <div>All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
 
 
     <script>
@@ -888,6 +835,27 @@
             // Set the background for the ::before pseudo-element
             cell.style.background = randomColor;
         }
+
+        /* --- BLUR REVEAL SCRIPT (NEW) --- */
+        // This simple observer adds the 'is-visible' class when elements enter viewport
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        // Target all elements with the .blur-reveal class
+        document.querySelectorAll('.blur-reveal').forEach((el) => {
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>
