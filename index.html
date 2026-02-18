@@ -11,7 +11,7 @@
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 
     <style>
         /* --- CORE VARIABLES --- */
@@ -20,23 +20,15 @@
             --deep-blue: #33454e;      
             --steel: #537380;          
             --teal: #81a9ad;           
-            --platinum: #ececec;       
+            --platinum: #ececec;
+            --magenta: #D1768B; 
             
             --font-main: 'Inter', sans-serif;
-            --font-logo: 'Free Zone', 'Inter', 'Arial Black', sans-serif; 
+            --font-human: 'Playfair Display', 'Times New Roman', serif; 
             
             --container-width: 1400px;
             --padding-x: 6vw;
             --header-height: 80px;
-            --border-thick: 2px;
-        }
-
-        @font-face {
-            font-family: 'Free Zone';
-            src: url('fonts/FreeZone-Bold.ttf') format('truetype');
-            font-weight: bold;
-            font-style: normal;
-            font-display: swap;
         }
 
         /* --- RESET --- */
@@ -48,43 +40,60 @@
             color: var(--platinum);
             line-height: 1.4;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* FIX: Ensures anchor links land correctly below fixed nav */
         html { 
             scroll-behavior: smooth; 
-            scroll-padding-top: var(--header-height);
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
         }
-
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
         
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
         /* --- UTILITIES --- */
         .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            border: 1px solid var(--teal);
-            color: var(--teal);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border: 1px solid var(--platinum);
+            color: var(--platinum);
+            font-family: var(--font-main);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-size: 0.8rem;
-            margin-top: 2rem;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
-            background: transparent;
-            z-index: 10;
             cursor: pointer;
+            background: transparent;
         }
         
         .btn:hover {
-            background: var(--teal);
+            background: var(--platinum);
             color: var(--charcoal);
         }
 
+        .btn.primary {
+            background-color: var(--magenta);
+            border-color: var(--magenta);
+            color: white;
+            box-shadow: 0 4px 15px rgba(193, 0, 115, 0.4);
+        }
+
+        .btn.primary:hover {
+            background-color: #a0005f;
+            transform: translateY(-2px);
+        }
+
         .label {
-            font-family: monospace;
-            color: var(--steel);
+            font-family: var(--font-main);
+            font-weight: 800;
+            color: var(--teal);
             text-transform: uppercase;
             letter-spacing: 0.15em;
             margin-bottom: 1.5rem;
@@ -97,8 +106,7 @@
             opacity: 0;
             filter: blur(10px);
             transform: translateY(30px);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, filter, transform;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .blur-reveal.is-visible {
@@ -117,22 +125,27 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 9999; /* Ensure Nav is ALWAYS on top for clicking */
+            z-index: 9999;
             padding: 0 var(--padding-x);
             height: var(--header-height);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(45, 41, 38, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            background: linear-gradient(to bottom, rgba(45,41,38,0.9), rgba(45,41,38,0));
+        }
+
+        nav.nav-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .logo {
-            font-family: var(--font-logo); 
-            font-weight: bold; 
-            font-size: 1.8rem;
-            letter-spacing: 0.02em;
+            font-family: var(--font-main); 
+            font-weight: 900; 
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -140,123 +153,156 @@
             text-transform: uppercase;
         }
 
+        .nav-links { display: flex; gap: 3rem; }
+
         .nav-links a {
-            margin-left: 3rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--platinum);
-            opacity: 0.7;
+            opacity: 0.8;
+            position: relative;
         }
-        .nav-links a:hover { opacity: 1; color: var(--teal); }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: var(--magenta);
+            transition: 0.3s;
+        }
 
-        /* --- STICKY STACKING LOGIC --- */
+        .nav-links a:hover { opacity: 1; color: white; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- LAYOUT LOGIC --- */
         .stack-section {
             position: sticky; 
             top: 0;
-            height: 100vh;
+            min-height: 100vh;
             width: 100%;
             overflow: hidden;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
 
-        .content-wrapper {
-            width: 100%;
-            padding: 0 var(--padding-x);
-            max-width: 1600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
         /* =========================================
-           SLIDE 1: CLINICAL INTERACTION
+           HERO SECTION
            ========================================= */
-        #option-1 {
+        #hero {
             background-color: var(--charcoal);
             z-index: 1;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-bg {
             position: absolute;
             inset: 0;
-            background-image: url("woman-with-skin-cancer-talking-with-doctor.jpg"); 
+            background-image: url("doctor_conversation.jpg"); 
             background-size: cover;
             background-position: center;
-            opacity: 0.4;
-            filter: grayscale(80%) contrast(120%);
+            filter: brightness(0.8) contrast(1.1); 
             z-index: 0;
         }
 
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, rgba(45,41,38,0.9) 0%, rgba(45,41,38,0.7) 50%, rgba(45,41,38,0.2) 100%);
+            background: linear-gradient(
+                135deg, 
+                rgba(45,41,38,0.4) 0%, 
+                rgba(193,0,115,0.15) 50%, 
+                rgba(45,41,38,0.6) 100%
+            );
             z-index: 1;
         }
 
-        .hero-text {
-            max-width: 800px;
+        .hero-content {
             position: relative;
-            z-index: 5;
+            z-index: 10;
+            height: 100vh;
+            width: 100%;
+            padding: 120px var(--padding-x) 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .hero-text h1 {
-            font-size: clamp(3.5rem, 6vw, 6rem);
-            font-weight: 800;
-            line-height: 1.1; 
-            letter-spacing: -0.03em;
+        .hero-top-text { align-self: flex-start; }
+
+        .hero-bottom-text {
+            align-self: flex-end;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            max-width: 800px;
+        }
+
+        .emotive-title {
+            font-family: var(--font-human);
+            font-size: clamp(3rem, 7vw, 7rem);
+            color: white;
+            line-height: 1;
+            font-style: italic;
+        }
+        
+        .hero-sub {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--platinum);
             margin-bottom: 2rem;
-            color: var(--platinum);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .hero-text h1 span {
-            color: var(--teal);
-            font-weight: 900;
-            text-shadow: 
-                2px 2px 0px rgba(0,0,0,0.8), 
-                0 0 30px rgba(45, 41, 38, 0.8);
-        }
-
-        .hero-text p {
-            font-size: 1.2rem;
-            color: var(--platinum);
             max-width: 500px;
-            border-left: 2px solid var(--teal);
-            padding-left: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-weight: 300;
+            margin-top: 1rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         /* =========================================
-           SLIDE 2: THE BLUEPRINT
+           SECTION 1: MISSION
            ========================================= */
-        #option-2 {
+        #mission {
             background-color: var(--deep-blue);
             z-index: 2;
-        }
-
-        .split-layout {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            height: 100vh;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
+            grid-template-columns: 1fr 1fr;
         }
 
-        .visual-side {
+        .mission-text {
+            padding: var(--padding-x);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .big-picture-text {
+            font-family: var(--font-main);
+            font-weight: 700;
+            font-size: clamp(2rem, 3.5vw, 3.5rem);
+            line-height: 1.2;
+            color: var(--platinum);
+        }
+
+        .mission-viz {
             position: relative;
-            border-right: var(--border-thick) solid var(--platinum);
-            overflow: hidden;
+            background: radial-gradient(circle at center, #3c505a 0%, var(--deep-blue) 70%);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at center, #3c505a 0%, var(--deep-blue) 70%);
+            overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
         .data-grid-viz {
@@ -297,307 +343,250 @@
             transform: rotate(45deg) scale(1);
         }
 
-        .text-side {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 6vw;
-            background: var(--deep-blue);
-        }
-
-        .text-side h2 {
-            font-size: clamp(2.5rem, 3.5vw, 4rem);
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            letter-spacing: -0.02em;
-            font-weight: 700;
-        }
-        
         /* =========================================
-           SLIDE 3: MONDRIAN GRID
+           SECTION 2: APPROACH
            ========================================= */
-        #option-3 {
+        #approach {
             background-color: var(--platinum);
             color: var(--charcoal);
             z-index: 3;
-        }
-
-        .mondrian-grid {
-            position: absolute;
-            inset: 0;
             display: grid;
-            grid-template-columns: 15% 45% 40%;
-            grid-template-rows: 65% 35%;
-            border: var(--border-thick) solid var(--charcoal);
+            grid-template-columns: 1fr 1fr;
         }
 
-        .m-block {
-            position: relative;
-            padding: 3rem;
+        .approach-text {
+            padding: var(--padding-x);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            border: var(--border-thick) solid var(--charcoal);
-            margin: -1px;
+            border-right: 2px solid var(--charcoal);
         }
 
-        .m-1 { 
-            grid-column: 1 / 2; 
-            grid-row: 1 / 3; 
-            background: var(--charcoal); 
+        .approach-desc {
+            font-family: var(--font-main);
+            font-weight: 400; 
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            line-height: 1.5;
+            color: var(--deep-blue);
+        }
+
+        .approach-viz {
+            position: relative;
+            background-color: var(--charcoal);
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
-        .v-text {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            font-size: 6vh;
-            font-weight: 900;
-            color: var(--teal);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            white-space: nowrap;
-        }
 
-        .m-2 { 
-            grid-column: 2 / 3; 
-            grid-row: 1 / 2; 
-            background: var(--platinum);
-            position: relative;
-        }
-
-        .m-3 { 
-            grid-column: 2 / 4; 
-            grid-row: 2 / 3; 
-            background: var(--deep-blue); 
-            color: var(--platinum);
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            padding-right: 6rem;
-        }
-
-        .m-4 { 
-            grid-column: 3 / 4; 
-            grid-row: 1 / 2; 
-            background: var(--teal);
-            color: var(--charcoal);
-        }
-
-        .m-4-text {
-            font-size: clamp(1.25rem, 2.5vw, 2.25rem);
-            font-weight: 600; 
-            line-height: 1.5;
-        }
-
-        .bauhaus-headline {
-            font-size: clamp(3rem, 5vw, 4.5rem);
-            font-weight: 900;
-            line-height: 0.85;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 2;
-        }
-
-        .bauhaus-sub {
-            font-size: 1.5rem;
-            line-height: 1.4;
-            max-width: 600px;
-            font-weight: 300;
+        #approachCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
         /* =========================================
-           SLIDE 4: ANALYTICS VISUALIZATION
+           SECTION 3: IMPACT
            ========================================= */
-        #option-4 {
+        #impact {
             background-color: var(--charcoal);
             z-index: 4;
             display: flex;
             align-items: center;
-        }
-
-        .analytics-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            width: 100%;
-        }
-
-        .viz-container {
+            padding: 8rem var(--padding-x);
+            min-height: 100vh;
             position: relative;
-            height: 500px;
-            border: 1px dashed var(--steel);
-            background: rgba(255,255,255,0.02);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
 
-        .transcript-sheet {
-            width: 200px;
-            height: 280px;
-            background: var(--platinum);
+        /* Art Deco / Tech Animation Background */
+        .impact-viz-container {
             position: absolute;
-            left: 10%;
-            top: 20%;
-            padding: 20px;
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            bottom: 0;         /* Anchor to bottom */
+            left: 0;           /* Start left */
+            width: 100%;       /* Span full width */
+            height: 45%;       /* Only occupy bottom 45% */
+            z-index: 0;        /* Behind content */
+            pointer-events: none;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 2;
-        }
-
-        .t-line { height: 6px; background: #ddd; width: 100%; border-radius: 2px; }
-        .t-line.short { width: 60%; }
-        
-        .t-badge {
-            position: absolute;
-            height: 16px;
-            width: 40px;
-            background: var(--teal);
-            right: -10px;
-            top: 40px;
-            border-radius: 20px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        }
-        .t-badge.b2 { top: 90px; background: var(--deep-blue); width: 30px; }
-        .t-badge.b3 { top: 150px; background: var(--steel); }
-
-        .chart-layer {
-            position: absolute;
-            right: 15%;
-            bottom: 25%;
-            display: flex;
+            justify-content: space-evenly;
             align-items: flex-end;
-            gap: 15px;
-            z-index: 3;
+            padding: 0 1rem;
+            mask-image: linear-gradient(to top, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
         }
 
-        .bar {
-            width: 40px;
-            background: var(--teal);
-            border-top: 2px solid var(--platinum);
+        .arch-line {
+            width: 1px;
+            background: rgba(236, 236, 236, 0.1);
             position: relative;
         }
-        
-        .analytics-text {
-            padding-left: 2rem;
-            border-left: 1px solid var(--deep-blue);
+
+        .arch-pulse {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 60px; 
+            background: linear-gradient(to top, var(--teal), transparent);
+            border-radius: 4px;
+            opacity: 0;
+            filter: blur(4px);
+            animation: scanUp 6s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .analytics-text h2 {
-            font-size: clamp(3rem, 5vw, 4rem);
-            line-height: 1;
+        .arch-node {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: var(--magenta);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--magenta);
+            opacity: 0;
+            animation: pulseNode 6s infinite;
+        }
+
+        @keyframes scanUp {
+            0% { bottom: 0; opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { bottom: calc(100% - 60px); opacity: 0; }
+        }
+
+        @keyframes pulseNode {
+            0%, 85% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            90% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        }
+
+        .impact-layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 4rem;
+            width: 100%;
+            position: relative;
+            z-index: 10; 
+        }
+
+        .impact-header h2 {
+            font-family: var(--font-human);
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            line-height: 1.1;
             color: var(--platinum);
-            font-weight: 800;
-            margin-bottom: 2rem;
+            margin-top: 2rem;
+            word-wrap: normal;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
         }
 
-        .type-desc {
-            font-size: 1.1rem;
-            color: var(--steel);
-            max-width: 450px;
+        .impact-list {
+            border-left: 1px solid var(--steel);
+            padding-left: 3rem;
+            background: linear-gradient(90deg, rgba(45,41,38,0.7), rgba(45,41,38,0));
+            backdrop-filter: blur(2px);
+        }
+
+        .impact-item {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .impact-item p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: var(--platinum);
+            max-width: 800px;
             line-height: 1.6;
         }
 
+        .impact-item::before {
+            content: '';
+            position: absolute;
+            left: -3.4rem;
+            top: 10px;
+            width: 12px;
+            height: 12px;
+            background: var(--magenta);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(209, 118, 139, 0.5); 
+        }
+
         /* =========================================
-           SECTION 5: WHAT WE DO
+           DEMO SECTION
            ========================================= */
-        #what-we-do {
+        #demo {
             background-color: var(--platinum);
             color: var(--charcoal);
             z-index: 5;
-            height: auto;
-            min-height: 100vh;
-            padding: 10rem var(--padding-x);
-            align-items: flex-start;
-            border-top: var(--border-thick) solid var(--charcoal);
-        }
-
-        .wwd-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 4rem;
-            width: 100%;
-        }
-
-        .wwd-label {
-            position: sticky;
-            top: 150px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-size: 1.1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .wwd-label::after {
-            content: '';
-            height: 80px;
-            width: var(--border-thick);
-            background: var(--charcoal);
-        }
-
-        .wwd-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6rem;
-            width: 100%;
-        }
-
-        .wwd-item {
-            border-left: var(--border-thick) solid var(--steel);
-            padding-left: 3rem;
+            padding: 8rem var(--padding-x);
+            min-height: auto;
             position: relative;
-            width: 100%; 
+        }
+
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .demo-info h2 {
+            font-family: var(--font-human);
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--charcoal);
         }
         
-        .wwd-item::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            background: var(--teal);
-            transform: rotate(45deg);
-        }
-
-        .wwd-item h3 {
-            font-size: clamp(1.8rem, 4vw, 4rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: normal;
-            word-spacing: 0.2em;
-            text-transform: uppercase;
-            
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            hyphens: auto; 
-            -webkit-hyphens: auto;
-        }
-
-        .wwd-item p {
-            font-size: 1.25rem;
-            line-height: 1.7;
-            max-width: 800px;
+        .demo-info p {
+            font-size: 1.1rem;
             color: var(--deep-blue);
-            font-weight: 300;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            width: 100%; 
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 500px;
         }
 
-        .accent-text { color: var(--teal); font-weight: 700; }
+        .demo-form {
+            background: white;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--magenta);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+        
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: var(--deep-blue);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            font-family: var(--font-main);
+            transition: 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--magenta);
+            background: white;
+        }
+
+        .form-textarea { height: 120px; resize: vertical; }
 
         /* =========================================
            FOOTER
@@ -605,166 +594,76 @@
         .footer {
             background-color: var(--deep-blue);
             color: var(--platinum);
-            padding: 6rem var(--padding-x) 2rem;
+            padding: 4rem var(--padding-x) 2rem;
+            z-index: 6;
             position: relative;
-            z-index: 6; 
-            border-top: var(--border-thick) solid var(--teal);
         }
 
-        .footer-cta {
-            margin-bottom: 6rem;
-            max-width: 1000px;
-        }
-
-        .section-label {
-            font-family: monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--teal);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .dot { width: 8px; height: 8px; background-color: var(--teal); border-radius: 50%; }
-
-        .footer-cta h2 {
-            font-size: clamp(2rem, 3vw, 3rem);
-            font-weight: 400;
-            margin-bottom: 1.5rem;
-            color: var(--steel);
-            line-height: 1.2;
-        }
-
-        .email-huge {
-            font-size: clamp(1.5rem, 3vw, 2.5rem); 
-            font-weight: 700;
-            color: var(--platinum);
-            letter-spacing: -0.02em;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s ease;
-            display: inline-block;
-            line-height: 1.1;
-        }
-
-        .email-huge:hover {
-            color: var(--teal);
-            border-bottom-color: var(--teal);
-        }
-
-        .footer-bottom {
+        .footer-top {
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 2rem;
-            font-size: 0.85rem;
-            color: var(--steel);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* --- MEDIA QUERIES (FULL RESPONSIVENESS) --- */
+        .footer-logo { font-weight: 900; font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-nav { display: flex; gap: 2rem; font-size: 0.9rem; font-weight: 600; }
+        .footer-nav a:hover { color: var(--magenta); }
+        .footer-bottom { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--steel); text-transform: uppercase; }
+
+        /* =========================================
+           RESPONSIVE (MOBILE)
+           ========================================= */
         @media (max-width: 900px) {
-            nav { padding: 0 1.5rem; }
+            :root { --padding-x: 1.5rem; }
+            
+            nav { background: rgba(45,41,38,0.95); }
             .nav-links { display: none; }
-            .logo { font-size: 1.5rem; }
-
-            /* FIX: White Space Issue - Force sections to auto height on mobile */
-            .stack-section {
-                position: relative;
-                top: auto;
-                height: auto !important; /* Force content-fit height */
-                min-height: 0 !important; /* Remove any minimums */
-                display: block;
-                padding-top: var(--header-height);
-            }
             
-            #option-1 { padding: 8rem 1.5rem 4rem; min-height: 80vh !important; /* Keep Hero tall */ }
-            .hero-text h1 { font-size: 2.8rem; }
-            .hero-bg { opacity: 0.3; }
-
-            .split-layout { 
-                grid-template-columns: 1fr; 
-                position: relative; 
-                height: auto; 
-                display: flex; 
-                flex-direction: column-reverse; 
-            }
-            .visual-side { 
-                height: 40vh; 
-                border-right: none; 
-                border-top: 2px solid var(--platinum); 
-                width: 100%;
-            }
-            .text-side { 
-                padding: 4rem 1.5rem; 
-                min-height: 50vh;
-            }
-            .data-grid-viz { gap: 1rem; transform: rotate(0deg); }
+            .stack-section { position: relative; height: auto; min-height: 0; top: auto; }
             
-            /* Slide 3 Mobile Fixes - Eliminate White Gap */
-            .mondrian-grid { 
+            #hero { padding-top: 80px; }
+            .hero-content { height: auto; padding: 4rem 1.5rem; min-height: 80vh; gap: 4rem; }
+            .emotive-title { font-size: 3.5rem; }
+            .hero-bottom-text { text-align: left; align-items: flex-start; }
+            .hero-actions { justify-content: flex-start; }
+
+            #mission, #approach, .demo-layout, .impact-layout { 
                 grid-template-columns: 1fr; 
-                grid-template-rows: auto; 
-                position: relative; 
-                border: none;
-                display: flex;       /* Use flex column to stack tightly */
+                display: flex;
                 flex-direction: column;
-                height: auto;
             }
-            .m-1 { display: none; }
-            .m-block { 
-                border: none; 
-                border-bottom: 2px solid var(--charcoal); 
-                padding: 3rem 1.5rem; 
-                height: auto;      /* Ensure blocks are auto height */
-                min-height: 0;
-            }
-            .m-2 { min-height: auto; } /* Remove fixed min-heights */
-            .m-3 { 
-                flex-direction: column; 
-                gap: 2rem; 
-                align-items: flex-start; 
-                padding-right: 1.5rem; 
-                margin-bottom: 0; /* Ensure no margin pushes content up */
-            }
-            
-            /* Slide 4 Mobile */
-            .analytics-layout { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0; }
-            .viz-container { height: 350px; width: 100%; margin-bottom: 2rem; }
-            .transcript-sheet { left: 50%; transform: translateX(-50%); top: 10%; width: 160px; height: 220px; }
-            .chart-layer { right: 10%; bottom: 10%; }
-            .analytics-text { padding-left: 0; border-left: none; }
 
-            /* WWD Mobile Fixes */
-            #what-we-do { padding: 4rem 1.5rem; overflow-x: hidden; }
-            .wwd-grid { grid-template-columns: 100%; gap: 2rem; }
-            .wwd-label { position: relative; top: 0; margin-bottom: 1rem; flex-direction: row; align-items: center;}
-            .wwd-label::after { height: var(--border-thick); width: 80px; }
+            .mission-viz, .approach-viz { height: 500px; width: 100%; order: -1; }
+            .data-grid-viz { transform: rotate(0deg); gap: 1rem; } 
             
-            .wwd-content { gap: 4rem; width: 100%; padding-right: 5px; } 
+            .approach-viz { flex-direction: column; gap: 2rem; }
             
-            .wwd-item { 
-                padding-left: 1.5rem; 
-                border-left-width: 2px;
-                width: 100%;
-            }
-            .wwd-item p { 
-                font-size: 1.1rem;
-                width: 100%;
-            }
+            .approach-text { border-right: none; }
             
-            /* Footer Mobile */
-            .footer { padding: 4rem 1.5rem 2rem; }
+            .impact-layout { gap: 2rem; }
+            
+            /* HIDE ANIMATION ON MOBILE */
+            .impact-viz-container { display: none; }
+            
+            .impact-list { padding-left: 1.5rem; border-left: 2px solid var(--steel); background: none; }
+            .impact-item::before { left: -1.9rem; width: 10px; height: 10px; }
+            .impact-item p { font-size: 1.1rem; }
+            
+            .demo-form { padding: 1.5rem; }
+            
+            .footer-top { flex-direction: column; gap: 2rem; }
             .footer-bottom { flex-direction: column; gap: 1rem; }
         }
-
     </style>
 </head>
 <body>
 
-    <nav>
+    <nav id="navbar">
         <div class="logo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="2" width="8" height="8" fill="#81a9ad"/>
@@ -774,142 +673,164 @@
             CCQ
         </div>
         <div class="nav-links">
-            <a href="#option-1">Approach</a>
-            <a href="#option-2">Solutions</a>
-            <a href="#option-3">Methodology</a>
+            <a href="#mission">Mission</a>
+            <a href="#approach">Approach</a>
+            <a href="#impact">Impact</a>
             <a href="#contact">Contact</a>
         </div>
     </nav>
 
-    <!-- SLIDE 1: Approach -->
-    <section id="option-1" class="stack-section">
+    <!-- HEADER / HERO -->
+    <header id="hero" class="stack-section">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
-        <div class="content-wrapper">
-            <div class="hero-text blur-reveal">
-                <span class="label">01 // Approach</span>
-                <!-- Updated Title Style with Shadow -->
-                <h1>Measuring<br><span>clinical communication quality.</span></h1>
-                <p>We transform clinical conversations into structured, measurable insights—no judgment, just precision.</p>
-                <a href="#what-we-do" class="btn">Our Methodology</a>
+        <div class="hero-content">
+            <div class="hero-top-text blur-reveal">
+                <h1 class="emotive-title">The right<br>conversation</h1>
             </div>
-        </div>
-    </section>
-
-    <!-- SLIDE 2: Vision -->
-    <section id="option-2" class="stack-section">
-        <div class="split-layout">
-            <div class="visual-side">
-                <div class="data-grid-viz" id="dataGrid">
-                    <!-- Nodes generated via JS -->
+            <div class="hero-bottom-text blur-reveal delay-100">
+                <h1 class="emotive-title">changes<br>everything.</h1>
+                <p class="hero-sub">It drives safety, trust, and outcomes. <br>We make it measurable.</p>
+                <div class="hero-actions">
+                    <a href="#approach" class="btn">Explore Our Approach</a>
+                    <a href="#demo" class="btn primary">Request A Demo</a>
                 </div>
             </div>
-            <div class="text-side">
-                <span class="label" style="color: var(--teal);">02 // Solutions</span>
-                <h2 class="blur-reveal">Independent<br>infrastructure for <br>measuring clinical <br>communication.</h2>
+        </div>
+    </header>
+
+    <!-- 01 // MISSION -->
+    <section id="mission" class="stack-section">
+        <div class="mission-text">
+            <span class="label">01 // Mission</span>
+            <p class="big-picture-text blur-reveal">
+                With our independent infrastructure, we help healthcare organizations measure, standardize, and improve clinical communication for safer, higher-quality care.
+            </p>
+        </div>
+        <div class="mission-viz">
+            <div class="data-grid-viz" id="dataGrid">
+                <!-- JS populates this -->
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 3: Data -->
-    <section id="option-3" class="stack-section">
-        <div class="mondrian-grid">
-            <div class="m-block m-1">
-                <div class="v-text">STRUCTURE</div>
+    <!-- 02 // APPROACH -->
+    <section id="approach" class="stack-section">
+        <div class="approach-text">
+            <span class="label" style="color: var(--deep-blue);">02 // Approach</span>
+            <p class="approach-desc blur-reveal">
+                We analyze ambient clinical encounter transcripts to extract measurable signals of communication and decision-making. 
+                <br><br>
+                Grounded in established decision-science literature, our frameworks give health systems scalable insight into the quality of clinical conversations.
+            </p>
+        </div>
+        <!-- APPROACH VISUALIZATION (CANVAS) -->
+        <div class="approach-viz" id="approachVizContainer">
+            <canvas id="approachCanvas"></canvas>
+        </div>
+    </section>
+
+    <!-- 03 // IMPACT -->
+    <section id="impact" class="stack-section">
+        <div class="impact-viz-container" id="impactViz">
+            <!-- JS will populate lines and pulses here -->
+        </div>
+
+        <div class="impact-layout">
+            <div class="impact-header">
+                <span class="label">03 // Impact</span>
+                <h2 class="blur-reveal">Communication becomes a measurable standard.</h2>
             </div>
-            <div class="m-block m-2">
-                <span class="label" style="color: var(--deep-blue); border-color: var(--deep-blue); margin-bottom: 1rem;">03 // Methodology</span>
-                <h2 class="bauhaus-headline blur-reveal">From<br>Speech<br>To Data.</h2>
-            </div>
-            <div class="m-block m-4">
-                <p class="blur-reveal delay-100 m-4-text">We extract signals related to interaction and decision processes using ambient documentation transcripts.</p>
-            </div>
-            <div class="m-block m-3">
-                <p class="bauhaus-sub blur-reveal delay-200">Grounded in established decision-science literature.</p>
+            <div class="impact-list">
+                <div class="impact-item blur-reveal delay-100">
+                    <p>Transform clinical conversations into actionable insights for care teams and leadership.</p>
+                </div>
+                <div class="impact-item blur-reveal delay-200">
+                    <p>Enable monitoring of documentation fidelity, ensuring accurate and reliable records.</p>
+                </div>
+                <div class="impact-item blur-reveal delay-300">
+                    <p>Support system-level quality improvement that enhances patient experience and trust.</p>
+                </div>
+                <div class="impact-item blur-reveal delay-300">
+                    <p>Facilitate research, benchmarking, and analysis of communication patterns across care settings.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 4: Analytics -->
-    <section id="option-4" class="stack-section">
-        <div class="content-wrapper">
-            <div class="analytics-layout">
-                <div class="viz-container blur-reveal">
-                    <div class="transcript-sheet blur-reveal delay-100">
-                        <div class="t-line"></div>
-                        <div class="t-line"></div>
-                        <div class="t-line short"></div>
-                        <div class="t-line"></div>
-                        <div class="t-line"></div>
-                        <div class="t-line short"></div>
-                        
-                        <div class="t-badge b1"></div>
-                        <div class="t-badge b2"></div>
-                        <div class="t-badge b3"></div>
+    <!-- REQUEST A DEMO -->
+    <section id="demo">
+        <div class="demo-layout">
+            <div class="demo-info">
+                <h2>Request A Demo</h2>
+                <p>Explore how communication can become a measurable standard within your organization.</p>
+                <p style="font-size: 0.95rem;">This live session includes a demonstration of our measurement framework and example outputs, along with a strategic discussion of how our clinical communication infrastructure can support quality improvement and research initiatives.</p>
+            </div>
+            <div class="demo-form">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" required>
                     </div>
-                    
-                    <div class="chart-layer blur-reveal delay-200">
-                        <div class="bar" style="height: 60px;"></div>
-                        <div class="bar" style="height: 120px;"></div>
-                        <div class="bar" style="height: 90px;"></div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-input" required>
                     </div>
-                </div>
-
-                <div class="analytics-text">
-                    <span class="label">04 // Mission</span>
-                    <h2 class="blur-reveal delay-100">Analytics,<br>Clinical,<br>Decisions.</h2>
-                    <div class="type-desc blur-reveal delay-200">
-                        CCQ focuses on measurement and analysis. We provide the infrastructure to understand what happens in the exam room at scale.
+                    <div class="form-group">
+                        <label class="form-label">Organization</label>
+                        <input type="text" class="form-input" required>
                     </div>
-                    <a href="#contact" class="btn blur-reveal delay-300">Partner with us</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECTION 5: WHAT WE DO -->
-    <section id="what-we-do" class="stack-section" style="position: relative;">
-        <div class="wwd-grid">
-            <div class="wwd-label">What We Do</div>
-            <div class="wwd-content">
-                <div class="wwd-item">
-                    <h3 class="blur-reveal">We Build Infrastructure.</h3>
-                    <p class="blur-reveal delay-100">We create <strong class="accent-text">encounter-level, scalable</strong> systems that integrate with ambient documentation technologies to extract meaningful signal from noise.</p>
-                </div>
-                <div class="wwd-item">
-                    <h3 class="blur-reveal">We Measure Quality.</h3>
-                    <p class="blur-reveal delay-100">Grounded in established decision-science literature, our tools focus on <strong class="accent-text">quality improvement</strong> and system-level analysis rather than individual judgment.</p>
-                </div>
-                <div class="wwd-item">
-                    <h3 class="blur-reveal">We Enable Research.</h3>
-                    <p class="blur-reveal delay-100">Designed for <strong class="accent-text">academic researchers</strong> and health systems conducting aggregated analysis of communication patterns across care settings.</p>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Request Details (Optional)</label>
+                        <textarea class="form-textarea"></textarea>
+                    </div>
+                    <button type="submit" class="btn primary" style="width: 100%;">Submit Request</button>
+                </form>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer" id="contact">
-        <div class="container">
-            <div class="footer-cta">
-                <div class="section-label" style="margin-bottom: 2rem;">
-                    <div class="dot"></div>
-                    Contact
-                </div>
-                <h2 class="blur-reveal">Bring clarity to clinical communication.</h2>
-                <a href="mailto:info@ccqsys.com" class="email-huge blur-reveal delay-100">info@ccqsys.com</a>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo">CCQ SYSTEMS, INC.</div>
+                <a href="mailto:info@ccqsys.com" style="color: var(--teal); font-weight: 600;">info@ccqsys.com</a>
             </div>
-            
-            <div class="footer-bottom">
-                <div>© 2026 CCQ, Inc.</div>
-                <div>All rights reserved.</div>
+            <div class="footer-nav">
+                <a href="#mission">Mission</a>
+                <a href="#approach">Approach</a>
+                <a href="#impact">Impact</a>
+                <a href="#demo">Demo</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 CCQ Systems, Inc. All rights reserved.</div>
+            <div style="display: flex; gap: 2rem;">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
             </div>
         </div>
     </footer>
 
-
     <script>
-        /* --- VISUALIZATION SCRIPT FOR SLIDE 2 --- */
+        /* --- NAV FADE ON SCROLL --- */
+        const nav = document.getElementById('navbar');
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('nav-hidden');
+            } else {
+                nav.classList.remove('nav-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        /* --- VISUALIZATION SCRIPT FOR MISSION (GRID) --- */
         const gridContainer = document.getElementById('dataGrid');
         for(let i=0; i<36; i++) {
             const node = document.createElement('div');
@@ -921,7 +842,6 @@
         }
         
         const nodes = document.querySelectorAll('.dg-node');
-        
         function animateGrid() {
             const index = Math.floor(Math.random() * nodes.length);
             const node = nodes[index];
@@ -931,9 +851,247 @@
                 nodes[clearIndex].classList.remove('has-signal');
             }
         }
-        
         for(let i=0; i<10; i++) animateGrid();
         setInterval(animateGrid, 800);
+
+        /* --- VISUALIZATION FOR IMPACT (ART DECO / TECH) --- */
+        const impactContainer = document.getElementById('impactViz');
+        const numLines = 40; 
+        if(impactContainer) {
+            for(let i=0; i<numLines; i++) {
+                const line = document.createElement('div');
+                line.classList.add('arch-line');
+                const height = Math.floor(Math.random() * 80) + 20;
+                line.style.height = height + '%';
+                const pulse = document.createElement('div');
+                pulse.classList.add('arch-pulse');
+                pulse.style.animationDelay = (Math.random() * 5) + 's';
+                pulse.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                line.appendChild(pulse);
+                const node = document.createElement('div');
+                node.classList.add('arch-node');
+                node.style.animationDelay = pulse.style.animationDelay; 
+                line.appendChild(node);
+                impactContainer.appendChild(line);
+            }
+        }
+
+        /* --- APPROACH VISUALIZATION (CENTERED + SLOWER) --- */
+        (function() {
+            const canvas = document.getElementById('approachCanvas');
+            const container = canvas.parentElement;
+            let W, H, ctx;
+            
+            const C = {
+                bg: '#2d2926',
+                deepBlue: '#33454e',
+                steel: '#537380',
+                teal: '#81a9ad',
+                platinum: '#ececec',
+                magenta: '#D1768B',
+            };
+
+            function hex2rgb(hex) {
+                const r = parseInt(hex.slice(1,3),16);
+                const g = parseInt(hex.slice(3,5),16);
+                const b = parseInt(hex.slice(5,7),16);
+                return {r,g,b};
+            }
+            function rgba(hex, a) {
+                const {r,g,b} = hex2rgb(hex);
+                return `rgba(${r},${g},${b},${a})`;
+            }
+
+            function resize() {
+                W = canvas.width = container.offsetWidth;
+                H = canvas.height = container.offsetHeight;
+                ctx = canvas.getContext('2d');
+            }
+
+            let progress = 0; 
+            let isAnimating = false;
+            let time = 0;
+
+            // --- DATA MODELS ---
+            const lines = [];
+            const numLineRows = 6;
+            for(let i=0; i<numLineRows; i++) {
+                const segments = [];
+                const numSegs = Math.floor(Math.random() * 3) + 2;
+                for(let j=0; j<numSegs; j++) {
+                    segments.push(Math.random() * 0.3 + 0.1); 
+                }
+                lines.push(segments);
+            }
+
+            const labels = [
+                { color: C.teal, type: 0 },
+                { color: C.magenta, type: 1 },
+                { color: C.platinum, type: 0 },
+                { color: C.steel, type: 1 },
+                { color: C.teal, type: 1 },
+                { color: C.magenta, type: 0 }
+            ];
+
+            const bars = [0.4, 0.7, 0.5, 0.85, 0.3]; 
+
+            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                time += 0.01;
+
+                const breath = (Math.sin(time) * 3); 
+                const topY = H * 0.2;
+                const midY = H * 0.5;
+                const botY = H * 0.8;
+                
+                // --- CENTERING LOGIC ---
+                // We define a fixed "content width" for the drawing to ensure it's centered
+                const contentWidth = 220; 
+                const startX = (W - contentWidth) / 2;
+                const centerX = W / 2;
+
+                // --- CONNECTORS (Vertical Dotted Axis) ---
+                ctx.save();
+                ctx.strokeStyle = rgba(C.steel, 0.15);
+                ctx.setLineDash([2, 4]);
+                ctx.beginPath();
+                ctx.moveTo(centerX, H * 0.1);
+                ctx.lineTo(centerX, H * 0.9);
+                ctx.stroke();
+                ctx.restore();
+
+                // --- PHASE 1: TRANSCRIPT LINES (Top) ---
+                const p1 = Math.min(1, progress * 2.5);
+                
+                if (p1 > 0) {
+                    const lineH = 12;
+                    const lineGap = 18;
+                    const linesTotalH = lines.length * lineGap;
+                    const linesStartY = topY - (linesTotalH / 2) + breath;
+                    
+                    lines.forEach((row, i) => {
+                        let rowX = startX; // Reset X for each row
+                        const rowP = Math.max(0, Math.min(1, (p1 - (i * 0.1)) * 2));
+                        
+                        if(rowP > 0) {
+                            ctx.globalAlpha = rowP;
+                            row.forEach(w => {
+                                const segW = w * 150; 
+                                ctx.fillStyle = rgba(C.platinum, 0.3);
+                                ctx.fillRect(rowX, linesStartY + (i * lineGap), segW, lineH);
+                                rowX += segW + 5;
+                            });
+                        }
+                    });
+                }
+
+                // --- PHASE 2: LABELS (Middle) ---
+                const p2 = Math.max(0, Math.min(1, (progress - 0.3) * 2));
+
+                if (p2 > 0) {
+                    const labelGap = 40;
+                    // Center the group of labels
+                    const labelsTotalW = (labels.length - 1) * labelGap; 
+                    const labelStartX = centerX - (labelsTotalW / 2);
+                    const labelY = midY - 6 + breath; // -6 to center shape vertically
+
+                    labels.forEach((lbl, i) => {
+                        const itemP = Math.max(0, Math.min(1, (p2 - (i * 0.1)) * 3));
+                        if(itemP <= 0) return;
+
+                        const x = labelStartX + (i * labelGap);
+                        
+                        // Connection Line from Top
+                        ctx.save();
+                        ctx.globalAlpha = itemP * 0.3;
+                        ctx.strokeStyle = lbl.color;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(x, topY + 40); 
+                        ctx.lineTo(x, labelY);
+                        ctx.stroke();
+                        ctx.restore();
+
+                        // Shape
+                        ctx.globalAlpha = itemP;
+                        ctx.fillStyle = rgba(lbl.color, 0.2);
+                        ctx.strokeStyle = lbl.color;
+                        
+                        if (lbl.type === 0) {
+                            ctx.beginPath();
+                            ctx.arc(x, labelY + 6, 6, 0, Math.PI*2);
+                            ctx.fill();
+                            ctx.stroke();
+                        } else {
+                            ctx.fillRect(x - 6, labelY, 12, 12);
+                            ctx.strokeRect(x - 6, labelY, 12, 12);
+                        }
+                    });
+                }
+
+                // --- PHASE 3: BARS (Bottom) ---
+                const p3 = Math.max(0, Math.min(1, (progress - 0.6) * 2));
+                
+                if (p3 > 0) {
+                    const barW = 20;
+                    const barGap = 35; // Increased gap slightly
+                    const barsTotalW = (bars.length * barW) + ((bars.length - 1) * (barGap - barW));
+                    const barStartX = centerX - (barsTotalW / 2) + 10; // slightly adjusted for visual balance
+                    const baseLine = botY + 20 + breath;
+
+                    bars.forEach((h, i) => {
+                        const barP = Math.max(0, Math.min(1, (p3 - (i * 0.1)) * 3));
+                        const easeBar = easeOutCubic(barP);
+                        
+                        if (barP > 0) {
+                            const curH = h * 60 * easeBar;
+                            const x = barStartX + (i * barGap);
+                            
+                            // Bar
+                            ctx.fillStyle = rgba(C.teal, 0.2);
+                            ctx.fillRect(x, baseLine - curH, barW, curH);
+                            
+                            // Top Cap
+                            ctx.fillStyle = C.teal;
+                            ctx.fillRect(x, baseLine - curH, barW, 2);
+
+                            // Connection from middle
+                            ctx.save();
+                            ctx.globalAlpha = barP * 0.2;
+                            ctx.strokeStyle = C.teal;
+                            ctx.beginPath();
+                            ctx.moveTo(x + barW/2, midY + 20);
+                            ctx.lineTo(x + barW/2, baseLine - curH);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                }
+
+                // Slower animation increment (0.008 -> 0.004)
+                if (isAnimating && progress < 1.2) {
+                    progress += 0.004; 
+                }
+                
+                requestAnimationFrame(draw);
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        isAnimating = true;
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            observer.observe(canvas);
+            
+            window.addEventListener('resize', resize);
+            resize();
+            draw(); 
+        })();
 
         /* --- BLUR REVEAL SCRIPT --- */
         const observerOptions = {
@@ -941,17 +1099,15 @@
             rootMargin: '0px',
             threshold: 0.1
         };
-
-        const observer = new IntersectionObserver((entries) => {
+        const blurObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
                 }
             });
         }, observerOptions);
-
         document.querySelectorAll('.blur-reveal').forEach((el) => {
-            observer.observe(el);
+            blurObserver.observe(el);
         });
     </script>
 </body>
